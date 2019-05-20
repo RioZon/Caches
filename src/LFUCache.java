@@ -26,6 +26,17 @@ public class LFUCache<K,V> implements Cache<K,V> {
         }
 
         V getObject() {
+            ++frequency;
+            if (frequency == Integer.MAX_VALUE) {
+                for (Map.Entry<K,Unit> entry : lhMap.entrySet()) {
+                    entry.getValue().decreaseFrequency();
+                }
+            }
+            return object;
+        }
+
+        // debug only
+        V getObjectSilent() {
             return object;
         }
 
@@ -33,21 +44,6 @@ public class LFUCache<K,V> implements Cache<K,V> {
             return frequency;
         }
 
-        /**
-         * Инкремент счетчика обращений с защитой от переполнения
-         */
-        void increaseFrequency() {
-            ++frequency;
-            if (frequency == Integer.MAX_VALUE) {
-                for (Map.Entry<K,Unit> entry : lhMap.entrySet()) {
-                    entry.getValue().decreaseFrequency();
-                }
-            }
-        }
-
-        /**
-         * Уменьшение всех счетчиков в 2 раза
-         */
         void decreaseFrequency() {frequency /= 2;}
     }
 
@@ -73,10 +69,7 @@ public class LFUCache<K,V> implements Cache<K,V> {
     @Override
     public V get(K key) {
         if (lhMap.containsKey(key)) {
-            Unit unit = lhMap.get(key);
-            unit.increaseFrequency();
-            lhMap.put(key, unit);
-            return unit.getObject();
+            return lhMap.get(key).getObject();
         }
         return null;
     }
@@ -86,7 +79,7 @@ public class LFUCache<K,V> implements Cache<K,V> {
      счетчика запросов */
     public V getSilent(K key) {
         if (lhMap.containsKey(key)) {
-            return lhMap.get(key).getObject();
+            return lhMap.get(key).getObjectSilent();
         }
         return null;
     }
