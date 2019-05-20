@@ -59,7 +59,7 @@ public class Main {
 
         System.out.println(lfuCache.toString());
 
-        System.out.println("LFU tests has been passed");
+        System.out.println("LFU tests have been passed");
         System.out.println("-----");
     }
 
@@ -121,12 +121,12 @@ public class Main {
 
         System.out.println(lruCache.toString());
 
-        System.out.println("LRU tests has been passed");
+        System.out.println("LRU tests have been passed");
     }
 
     public static void main(String[] args) {
         lfuTest();
         lruTest();
-        System.out.println("All tests has been passed");
+        System.out.println("All tests have been passed");
     }
 }
